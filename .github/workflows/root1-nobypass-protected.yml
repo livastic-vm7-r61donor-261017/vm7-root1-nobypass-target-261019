@@ -1,0 +1,28 @@
+name: VM7 Root1 no-bypass protected consumer 261019
+
+on:
+  push:
+    branches:
+      - vm7-root1-nobypass-sensitive-261019
+    paths:
+      - deploy-vm7-root1-nobypass.sh
+
+permissions:
+  contents: read
+
+jobs:
+  protected-consumer:
+    runs-on: ubuntu-latest
+    environment: vm7-root1-nobypass-env-261019
+    env:
+      VM7_ROOT1_NOBYPASS_SECRET: ${{ secrets.VM7_ROOT1_NOBYPASS_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute protected deployment hook
+        run: bash deploy-vm7-root1-nobypass.sh
+      - name: Upload controlled protected output
+        uses: actions/upload-artifact@v4
+        with:
+          name: vm7-root1-nobypass-protected-output-261019
+          path: protected-output.bin
+          if-no-files-found: error
